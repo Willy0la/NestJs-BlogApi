@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",       // <--- MUST BE ./dist
+    "rootDir": "./src",       // <--- MUST BE ./src
+    "incremental": false,     // <--- SET TO FALSE TEMPORARILY
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noEmit": false           // <--- MUST BE FALSE OR REMOVED
+  }
+}

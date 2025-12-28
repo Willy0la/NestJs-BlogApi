@@ -1,0 +1,60 @@
+API Endpoints Documentation
+
+Base URL: http://localhost:3000 (default)
+
+=== Authentication ===
+POST /auth/signup
+    - Register a new user.
+    - Body: { name, userName, email, password }
+POST /auth/signin
+    - Login a user.
+    - Body: { identifier, password }
+    - Returns: JWT Token
+
+=== User Profile (Protected) ===
+GET /user-blog/profile
+    - Get current user's profile.
+    - Headers: Authorization: Bearer <token>
+PATCH /user-blog/profile
+    - Update current user's profile.
+    - Headers: Authorization: Bearer <token>
+    - Body: { ...fields to update }
+
+=== Blogs ===
+GET /blogs
+    - Get all blog posts (Public).
+GET /blogs/:id
+    - Get a specific blog post by ID (Public).
+POST /blogs
+    - Create a new blog post (Protected).
+    - Headers: Authorization: Bearer <token>
+    - Body: FormData (title, content, file [optional image])
+PATCH /blogs/:id
+    - Update a blog post (Protected, Owner only).
+    - Headers: Authorization: Bearer <token>
+    - Body: { title, content }
+DELETE /blogs/:id
+    - Delete a blog post (Protected, Owner only).
+    - Headers: Authorization: Bearer <token>
+PATCH /blogs/:id/like
+    - Like/Unlike a blog post (Protected).
+    - Headers: Authorization: Bearer <token>
+
+=== Comments ===
+GET /comments/:blogId
+    - Get all comments for a specific blog (Public).
+POST /comments/:blogId
+    - Add a comment to a blog (Protected).
+    - Headers: Authorization: Bearer <token>
+    - Body: { content }
+PATCH /comments/:id
+    - Update a comment (Protected, Author only).
+    - Headers: Authorization: Bearer <token>
+    - Body: { content }
+DELETE /comments/:id
+    - Delete a comment (Protected, Author only).
+    - Headers: Authorization: Bearer <token>
+
+=== System ===
+GET /
+    - Health check / Hello World.
