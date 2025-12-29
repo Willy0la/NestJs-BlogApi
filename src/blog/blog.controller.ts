@@ -47,7 +47,7 @@ export class BlogController {
     @Req() req: RequestWithUser,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.blogService.create(req.user._id, dto, file);
+    return this.blogService.create(req.user._id.toString(), dto, file);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -57,18 +57,18 @@ export class BlogController {
     @Body() dto: UpdateBlogDto,
     @Req() req: RequestWithUser,
   ) {
-    return this.blogService.update(id, req.user._id, dto);
+    return this.blogService.update(id, req.user._id.toString(), dto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteBlog(@Param('id') id: string, @Req() req: RequestWithUser) {
-    return this.blogService.remove(id, req.user._id);
+    return this.blogService.remove(id, req.user._id.toString());
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/like')
   async toggleLike(@Param('id') blogId: string, @Req() req: any) {
-    return this.blogService.toggleLike(blogId, req.user._id);
+    return this.blogService.toggleLike(blogId, req.user._id.toString());
   }
 }

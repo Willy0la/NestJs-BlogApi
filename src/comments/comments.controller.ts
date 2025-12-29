@@ -30,7 +30,7 @@ export class CommentController {
     @Body() dto: CreateCommentDto,
     @Req() req: any,
   ) {
-    return this.commentService.create(req.user._id, blogId, dto);
+    return this.commentService.create(req.user._id.toString(), blogId, dto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -40,12 +40,12 @@ export class CommentController {
     @Body('content') content: string,
     @Req() req: any,
   ) {
-    return this.commentService.update(id, req.user._id, content);
+    return this.commentService.update(id, req.user._id.toString(), content);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteComment(@Param('id') id: string, @Req() req: any) {
-    return this.commentService.remove(id, req.user._id);
+    return this.commentService.remove(id, req.user._id.toString());
   }
 }
