@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
@@ -27,7 +26,7 @@ import { BlogUser, UserSchema } from './schemas/user-blog.schema';
 
 // Providers & Strategies
 import { JwtStrategy } from './strategy/jwt.strategy';
-
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -45,7 +44,15 @@ import { JwtStrategy } from './strategy/jwt.strategy';
         PORT: Joi.number().default(3000).required(),
       }),
     }),
-
+JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('TOKEN'),
+        signOptions: {
+          expiresIn: '1d',
+        },
+      }),
+    }),
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       imports: [ConfigModule],
@@ -53,12 +60,12 @@ import { JwtStrategy } from './strategy/jwt.strategy';
         uri: config.get<string>('DB'),
       }),
     }),
-    
+
     // Register All Schemas
     MongooseModule.forFeature([
-        { name: Blog.name, schema: BlogSchema },
-        { name: Comment.name, schema: CommentSchema },
-        { name: BlogUser.name, schema: UserSchema },
+      { name: Blog.name, schema: BlogSchema },
+      { name: Comment.name, schema: CommentSchema },
+      { name: BlogUser.name, schema: UserSchema },
     ]),
 
     RedisModule,
@@ -68,7 +75,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
     BlogController,
     CommentController,
     UserAuthController,
-    UserBlogController
+    UserBlogController,
   ],
   providers: [
     AppService,
