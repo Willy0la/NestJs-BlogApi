@@ -1,6 +1,6 @@
 import { Controller, Get, Patch, Body, Req, UseGuards } from '@nestjs/common';
-import { UserBlogService } from './user-blog.service';
-import { UpdateProfileDto } from './profile-dto/update.user.dto';
+import { UserBlogService } from '../services/user-blog.service';
+import { UpdateProfileDto } from '../dtos/update.user.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../guard/jwt.guard';
 

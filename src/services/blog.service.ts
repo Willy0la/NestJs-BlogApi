@@ -7,11 +7,11 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, Document } from 'mongoose';
-import { Blog } from './blog.schema';
-import { UpdateBlogDto } from './blog-dto/update.blog.dto';
-import { CreateBlogDto } from './blog-dto/create.blog.dto';
-import { Comment } from '../comments/comments.schema';
-import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { Blog } from '../schemas/blog.schema';
+import { UpdateBlogDto } from '../dtos/update.blog.dto';
+import { CreateBlogDto } from '../dtos/create.blog.dto';
+import { Comment } from '../schemas/comments.schema';
+import { CloudinaryService } from './cloudinary.service';
 import Redis from 'ioredis';
 import { Inject } from '@nestjs/common';
 export interface BlogResponse {

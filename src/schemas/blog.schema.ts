@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { BlogUser } from '../user-blog/user-blog.schema';
+import { BlogUser } from './user-blog.schema';
 
 @Schema({ timestamps: true })
 export class Blog extends Document {

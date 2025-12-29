@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { BlogUser } from './user-blog.schema';
+import { BlogUser } from '../schemas/user-blog.schema';
 import { Model, Types } from 'mongoose';
-import { UpdateProfileDto } from './profile-dto/update.user.dto';
+import { UpdateProfileDto } from '../dtos/update.user.dto';
 import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserBlogService {

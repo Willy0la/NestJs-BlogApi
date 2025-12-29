@@ -4,13 +4,13 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { BlogUser } from '../user-blog/user-blog.schema';
+import { BlogUser } from '../schemas/user-blog.schema';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { SignUpDto } from '../auth-dto/user.signup.dto';
+import { SignUpDto } from '../dtos/user.signup.dto';
 import * as bcrypt from 'bcrypt';
-import { SignInDto } from '../auth-dto/user.signin.dto';
+import { SignInDto } from '../dtos/user.signin.dto';
 
 @Injectable()
 export class UserAuthService {

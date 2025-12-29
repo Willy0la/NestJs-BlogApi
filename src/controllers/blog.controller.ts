@@ -12,10 +12,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { BlogService, BlogResponse } from './blog.service';
+import { BlogService, BlogResponse } from '../services/blog.service';
 import { JwtAuthGuard } from '../guard/jwt.guard';
-import { CreateBlogDto } from './blog-dto/create.blog.dto';
-import { UpdateBlogDto } from './blog-dto/update.blog.dto';
+import { CreateBlogDto } from '../dtos/create.blog.dto';
+import { UpdateBlogDto } from '../dtos/update.blog.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 interface RequestWithUser extends Request {
