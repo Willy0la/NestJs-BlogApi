@@ -46,14 +46,7 @@ $ npm install
 Create a `.env.development.local` file in the root directory:
 
 ```env
-NODE=development
-PORT=3000
-DB=mongodb://localhost:27017/blog-api  # Or your MongoDB Atlas URI
-TTL=3600s                              # JWT Expiration
-TOKEN=your_jwt_secret_key
-CLOUDINARY_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+
 ```
 
 ### 4. Running the App
