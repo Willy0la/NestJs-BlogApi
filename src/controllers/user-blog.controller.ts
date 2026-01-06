@@ -1,4 +1,12 @@
-import { Controller, Get, Patch, Body, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Patch,
+  Body,
+  Req,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { UserBlogService } from '../services/user-blog.service';
 import { UpdateProfileDto } from '../dtos/update.user.dto';
 import { Request } from 'express';
@@ -28,5 +36,12 @@ export class UserBlogController {
   async updateProfile(@Req() req: AuthRequest, @Body() dto: UpdateProfileDto) {
     const user = req.user;
     return this.userService.updateProfile(user._id, dto);
+  }
+
+  @Get(':id')
+  async getProfileById(@Param('id') id: string) {
+    const user = await this.userService.findById(id);
+
+    return user;
   }
 }
