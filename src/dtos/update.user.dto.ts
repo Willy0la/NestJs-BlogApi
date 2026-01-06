@@ -20,7 +20,7 @@ export class UpdateProfileDto {
 
   @IsEmail({}, { message: 'Please provide a valid email address' })
   @IsOptional()
-  @Matches(/^[a-zA-Z0-9._%+-]+\.com$/, {
+  @Matches(/^[\w.%+-]+@[A-Za-z0-9.-]+\.com$/, {
     message: 'Email must be a valid email address ending in .com',
   })
   email?: string;
