@@ -22,16 +22,17 @@ interface AuthRequest extends Request {
 }
 
 @Controller('user-blog')
-@UseGuards(JwtAuthGuard)
 export class UserBlogController {
   constructor(private readonly userService: UserBlogService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Req() req: AuthRequest) {
     const user = req.user;
     return this.userService.getProfile(user._id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch('profile')
   async updateProfile(@Req() req: AuthRequest, @Body() dto: UpdateProfileDto) {
     const user = req.user;
