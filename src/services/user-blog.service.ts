@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { BlogUser } from '../schemas/user-blog.schema';
 import { Model } from 'mongoose';
 import { UpdateProfileDto } from '../dtos/update.user.dto';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 @Injectable()
 export class UserBlogService {
   constructor(
