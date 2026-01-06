@@ -42,10 +42,10 @@ import { JwtModule } from '@nestjs/jwt';
         CLOUDINARY_API_KEY: Joi.string().required(),
         CLOUDINARY_API_SECRET: Joi.string().required(),
         PORT: Joi.number().default(3000).required(),
-         REDIS_URL: Joi.string().required()
+        REDIS_URL: Joi.string().required(),
       }),
     }),
-JwtModule.registerAsync({
+    JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('TOKEN'),

@@ -38,7 +38,7 @@ export class UserBlogController {
     return this.userService.updateProfile(user._id, dto);
   }
 
-  @Get(':id')
+  @Get('id/:id')
   async getProfileById(@Param('id') id: string) {
     const user = await this.userService.findById(id);
 
