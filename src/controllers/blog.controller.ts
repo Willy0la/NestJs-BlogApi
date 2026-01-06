@@ -30,8 +30,9 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Get()
-  async getAllBlogs() {
-    return this.blogService.findAll();
+  async getAllBlogs(): Promise<BlogResponse[]> {
+    const blogs = (await this.blogService.findAll()) as BlogResponse[];
+    return blogs;
   }
 
   @Get(':id')
@@ -68,7 +69,9 @@ export class BlogController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/like')
-  async toggleLike(@Param('id') blogId: string, @Req() req: any) {
+  async toggleLike(@Param('id') blogId: string, @Req() req: RequestWithUser) {
     return this.blogService.toggleLike(blogId, req.user._id.toString());
   }
 }
+
+//blogIdz 6956424e1697eae62887477f

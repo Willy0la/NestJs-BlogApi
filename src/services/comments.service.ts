@@ -20,7 +20,6 @@ export class CommentService {
       author: new Types.ObjectId(userId),
       blogId: new Types.ObjectId(blogId),
     });
-
     return comment;
   }
 
@@ -36,12 +35,6 @@ export class CommentService {
     if (!comment || comment.isDeleted)
       throw new NotFoundException('Comment not found');
 
-
-    const authorId = comment.author.toString().trim();
-    const currentUserId = String(userId).trim();
-
-
-
     if (comment.author.toString() !== userId.toString()) {
       throw new ForbiddenException('You can only edit your own comments');
     }
@@ -52,10 +45,10 @@ export class CommentService {
 
   async remove(commentId: string, userId: string) {
     const comment = await this.commentModel.findById(commentId);
-    if (!comment) throw new NotFoundException('Comment not found');
+    if (!comment || comment.isDeleted)
+      throw new NotFoundException('Comment not found');
 
-
-    if (comment.author.toString() !== userId) {
+    if (comment.author.toString() !== userId.toString()) {
       throw new ForbiddenException('You can only delete your own comments');
     }
 

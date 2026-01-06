@@ -29,7 +29,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('User no longer exists');
     }
 
-    // Optional: Kick out users if their account was locked after they logged in
     if (user.lockUntil && user.lockUntil > new Date()) {
       throw new UnauthorizedException('Account is currently locked');
     }

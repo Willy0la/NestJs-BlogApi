@@ -36,8 +36,8 @@ export class UserAuthService {
       userName: string;
       email: string;
     };
-    success: boolean;
     token: string;
+    success: boolean;
   }> {
     try {
       const { name, userName, email, password } = dto;
@@ -56,15 +56,15 @@ export class UserAuthService {
         email: email,
         password: hashedPassword,
       });
-      this.logger.log(newUser);
+      this.logger.log(`User created: ${newUser._id.toString()}`);
 
       const payload = { sub: newUser._id };
       const token = this.jwtService.sign(payload);
       return {
         message: 'New user successfully created',
         data: this.sanitizeUser(newUser),
-        success: true,
         token,
+        success: true,
       };
     } catch (error) {
       this.logger.error(error);
@@ -72,7 +72,6 @@ export class UserAuthService {
         throw error;
       }
 
-      // Otherwise, throw the generic server error
       throw new InternalServerErrorException(
         'Unable to create new user, try again ...',
       );
@@ -91,7 +90,7 @@ export class UserAuthService {
     token: string;
   }> {
     try {
-      const MAX_FAILED_ATTEMPTS = 10;
+      const MAX_FAILED_ATTEMPTS = 5;
       const LOCK_TIME = 15 * 60 * 1000;
       const { identifier, password } = dto;
 
@@ -100,37 +99,47 @@ export class UserAuthService {
       });
 
       if (!existingUser) {
-        throw new BadRequestException('Invalid email or username');
+        throw new BadRequestException('Invalid credentials');
       }
 
+      // unlock time logic
       const now = new Date();
 
       if (existingUser.lockUntil && existingUser.lockUntil > now) {
-        const secondsLeft = Math.ceil(
-          (existingUser.lockUntil.getTime() - now.getTime()) / 1000,
-        );
         throw new BadRequestException(
-          `Account is locked. Try again in ${secondsLeft} seconds.`,
+          `Account is temporarily locked. Please try again later.`,
         );
       }
 
       const isMatch = await bcrypt.compare(password, existingUser.password);
+
+      // account password trial and lockout
       if (!isMatch) {
+        // increment failed login attempts
         existingUser.failedLoginAttempts =
           (existingUser.failedLoginAttempts || 0) + 1;
 
+        // lock account if max attempts reached
         if (existingUser.failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
           existingUser.lockUntil = new Date(now.getTime() + LOCK_TIME);
         }
+
         await existingUser.save();
         throw new BadRequestException('Incorrect password');
       }
 
-      existingUser.failedLoginAttempts = 0;
-      existingUser.lockUntil = null;
-      await existingUser.save();
+      // login attempt reset for password and expired lock
+      if (
+        existingUser.failedLoginAttempts > 0 ||
+        (existingUser.lockUntil && existingUser.lockUntil <= now)
+      ) {
+        existingUser.failedLoginAttempts = 0;
+        existingUser.lockUntil = null;
+        await existingUser.save();
+      }
 
-      const payload = { sub: existingUser._id };
+      // create payload using the userId
+      const payload = { sub: existingUser._id, purpose: 'signup' };
       const token = this.jwtService.sign(payload);
 
       return {

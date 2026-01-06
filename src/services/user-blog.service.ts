@@ -1,7 +1,7 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogUser } from '../schemas/user-blog.schema';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { UpdateProfileDto } from '../dtos/update.user.dto';
 import * as bcrypt from 'bcrypt';
 @Injectable()
@@ -27,11 +27,11 @@ export class UserBlogService {
   }
 
   async updateProfile(userId: string, dto: UpdateProfileDto) {
-    const updateData: any = { ...dto };
+    const updateData = { ...dto };
 
-    if (dto.password) {
+    if (updateData.password) {
       const salt = await bcrypt.genSalt(12);
-      updateData.password = await bcrypt.hash(dto.password, salt);
+      updateData.password = await bcrypt.hash(updateData.password, salt);
     }
 
     const updated = await this.userModel

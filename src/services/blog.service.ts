@@ -25,7 +25,6 @@ export interface BlogResponse {
   likesCount: number;
   commentsCount: number;
   coverImage?: { publicId: string; url: string };
-  createdAt: Date;
 }
 
 @Injectable()
@@ -40,27 +39,19 @@ export class BlogService {
     @Inject('REDIS_CLIENT') private readonly redis: Redis,
   ) {}
 
-
-  private sanitizeBlog(
-    blog: Blog & Document & { createdAt?: Date },
-    commentsCount: number = 0,
-  ): BlogResponse {
-
+  private sanitizeBlog(blog: Blog, commentsCount: number = 0): BlogResponse {
     const authorData = blog.author as
       | Types.ObjectId
       | { _id: Types.ObjectId; userName?: string };
-
 
     let authorId: string;
     let authorUserName: string | undefined;
 
     if (authorData && typeof authorData === 'object' && '_id' in authorData) {
-
       authorId = authorData._id.toString();
       authorUserName =
         'userName' in authorData ? authorData.userName : undefined;
     } else {
-
       authorId = (authorData as Types.ObjectId).toString();
       authorUserName = undefined;
     }
@@ -76,11 +67,8 @@ export class BlogService {
       likesCount: blog.likes?.length || 0,
       commentsCount: commentsCount,
       coverImage: blog.coverImage,
-      createdAt: blog.createdAt!,
     };
   }
-
-
 
   async create(userId: string, dto: CreateBlogDto, file?: Express.Multer.File) {
     try {
@@ -113,12 +101,10 @@ export class BlogService {
     }
   }
 
-
-
   async findAll() {
     const cached = await this.redis.get('blogs_all');
     if (cached) {
-      return JSON.parse(cached);
+      return JSON.parse(cached) ;
     }
 
     const blogs = await this.blogModel
@@ -135,13 +121,11 @@ export class BlogService {
         return this.sanitizeBlog(blog, count);
       }),
     );
-    
+
     const result = { success: true, data };
     await this.redis.set('blogs_all', JSON.stringify(result), 'EX', 60); // Cache for 1 min
     return result;
   }
-
-
 
   async findOne(blogId: string) {
     const blog = await this.blogModel
@@ -152,7 +136,6 @@ export class BlogService {
     if (!blog) {
       throw new NotFoundException('Blog not found or has been removed');
     }
-
 
     const commentsCount = await this.commentModel.countDocuments({
       blogId: blog._id,
@@ -165,7 +148,6 @@ export class BlogService {
     };
   }
 
-
   async update(blogId: string, userId: string, dto: UpdateBlogDto) {
     const blog = await this.blogModel.findOne({
       _id: blogId,
@@ -176,11 +158,9 @@ export class BlogService {
       throw new NotFoundException('Blog not found');
     }
 
-
     if (blog.author.toString() !== userId) {
       throw new ForbiddenException('You are not allowed to edit this blog');
     }
-
 
     Object.assign(blog, dto);
     const updatedBlog = await blog.save();
@@ -193,8 +173,6 @@ export class BlogService {
       data: this.sanitizeBlog(updatedBlog),
     };
   }
-
-
 
   async remove(blogId: string, userId: string) {
     const blog = await this.blogModel.findOne({
@@ -221,7 +199,6 @@ export class BlogService {
     };
   }
 
-
   async toggleLike(blogId: string, userId: any) {
     const blog = await this.blogModel.findById(blogId);
     if (!blog || blog.isDeleted) {
@@ -234,7 +211,6 @@ export class BlogService {
     const updateAction = hasLiked
       ? { $pull: { likes: userId } }
       : { $addToSet: { likes: userId } };
-
 
     const updatedBlog = await this.blogModel
       .findByIdAndUpdate(blogId, updateAction, { new: true })

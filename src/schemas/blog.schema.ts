@@ -31,8 +31,7 @@ export class Blog extends Document {
     publicId: string;
     url: string;
   };
-
-  // Likes (store users who liked)
+  // Likes store users who liked
   @Prop({
     type: [{ type: Types.ObjectId, ref: BlogUser.name }],
     default: [],
