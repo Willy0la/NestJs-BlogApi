@@ -73,5 +73,3 @@ export class BlogController {
     return this.blogService.toggleLike(blogId, req.user._id.toString());
   }
 }
-
-//blogIdz 6956424e1697eae62887477f
